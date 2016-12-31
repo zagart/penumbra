@@ -2,6 +2,9 @@ package by.zagart.android.penumbra.interfaces;
 
 import android.support.annotation.StringDef;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 /**
  * Interface defines data which is necessary for executing
  * HTTP-requests and handling HTTP-responses.
@@ -19,6 +22,7 @@ interface IHttpData {
             Header.CONTENT_TYPE,
             Header.CRITERIA,
     })
+    @Retention(RetentionPolicy.SOURCE)
     @interface Header {
 
         String ACTION = "action";
@@ -30,6 +34,7 @@ interface IHttpData {
     }
 
     @StringDef(ContentType.APPLICATION_JSON)
+    @Retention(RetentionPolicy.SOURCE)
     @interface ContentType {
 
         String APPLICATION_JSON = "application/json; charset=UTF-8";
@@ -39,6 +44,7 @@ interface IHttpData {
             Actions.AUTHENTICATE,
             Actions.REGISTER
     })
+    @Retention(RetentionPolicy.SOURCE)
     @interface Actions {
 
         String AUTHENTICATE = "authenticate";

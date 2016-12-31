@@ -5,6 +5,8 @@ import android.os.Looper;
 import android.support.annotation.StringDef;
 
 import java.io.ByteArrayOutputStream;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -92,6 +94,7 @@ public class ThreadManager {
             Execution.PARALLEL,
             Execution.SINGLE
     })
+    @Retention(RetentionPolicy.SOURCE)
     public @interface Execution {
 
         String PARALLEL = "Parallel";
