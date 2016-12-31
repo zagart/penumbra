@@ -6,7 +6,8 @@ import android.graphics.Matrix;
 /**
  * Utility class for working with images.
  */
-public class ImageUtil {
+@SuppressWarnings("unused")
+public final class ImageUtil {
 
     public static Bitmap getResizedBitmap(final Bitmap pBitmap,
                                           final int pNewWidth,

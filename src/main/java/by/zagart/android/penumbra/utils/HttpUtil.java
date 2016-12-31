@@ -18,8 +18,8 @@ import by.zagart.android.penumbra.constants.NetworkConstants;
  *
  * @author zagart
  */
-
-public class HttpUtil {
+@SuppressWarnings("unused")
+final class HttpUtil {
 
     public static void setRequestBody(final HttpURLConnection pConnection,
                                       final Map<String, String> pBody) {
@@ -29,8 +29,8 @@ public class HttpUtil {
             try {
                 output = pConnection.getOutputStream();
                 jsonObject.put(entry.getKey(), entry.getValue());
-                byte[] outputInBytes = jsonObject.toString().getBytes(NetworkConstants.UTF_8);
-                for (byte byt3 : outputInBytes) {
+                final byte[] outputInBytes = jsonObject.toString().getBytes(NetworkConstants.UTF_8);
+                for (final byte byt3 : outputInBytes) {
                     output.write(byt3);
                 }
             } catch (JSONException | IOException pEx) {

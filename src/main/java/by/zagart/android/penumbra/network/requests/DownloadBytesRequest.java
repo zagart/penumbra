@@ -18,7 +18,7 @@ import by.zagart.android.penumbra.utils.IOUtil;
 
 public class DownloadBytesRequest implements IHttpClient.IRequest<ByteArrayOutputStream> {
 
-    final private String mUrl;
+    private final String mUrl;
 
     public DownloadBytesRequest(final String pUrl) {
         mUrl = pUrl;

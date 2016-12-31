@@ -5,7 +5,7 @@ package by.zagart.android.penumbra.utils;
  *
  * @author zagart
  */
-
+@SuppressWarnings("unused")
 public class StringUtil {
 
     public static String add(final String... pStrings) {

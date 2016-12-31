@@ -38,10 +38,10 @@ class HttpClient implements IHttpClient {
                 result = pRequest.onErrorStream(connection, errorStream);
             }
             return result;
-        } catch (SocketTimeoutException pEx) {
+        } catch (final SocketTimeoutException pEx) {
             pRequest.onTimeoutException();
             return null;
-        } catch (IOException pEx) {
+        } catch (final IOException pEx) {
             pRequest.onIOException();
             return null;
         } finally {

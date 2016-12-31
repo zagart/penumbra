@@ -7,8 +7,8 @@ import android.database.Cursor;
  *
  * @author zagart
  */
-
-public class CursorUtil {
+@SuppressWarnings("unused")
+public final class CursorUtil {
 
     public static Long getLong(final Cursor pCursor, final String pColumnName) {
         return pCursor.getLong(pCursor.getColumnIndex(pColumnName));

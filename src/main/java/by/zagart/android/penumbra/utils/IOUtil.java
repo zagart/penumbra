@@ -17,7 +17,8 @@ import by.zagart.android.penumbra.constants.ExceptionConstants;
  *
  * @author zagart
  */
-public class IOUtil {
+@SuppressWarnings("unused")
+public final class IOUtil {
 
     private static final short READ_BUFFER_SIZE = 4096;
     private static final byte EOF = -1;
@@ -26,7 +27,7 @@ public class IOUtil {
         if (pCloseable != null) {
             try {
                 pCloseable.close();
-            } catch (IOException pEx) {
+            } catch (final IOException pEx) {
                 throw new RuntimeException(ExceptionConstants.CLOSABLE_CLOSING_EXCEPTION);
             }
         }
@@ -41,7 +42,7 @@ public class IOUtil {
             while ((bytesRead = pInputStream.read(buffer)) > 0) {
                 outputStream.write(buffer, 0, bytesRead);
             }
-        } catch (IOException pEx) {
+        } catch (final IOException pEx) {
             throw new RuntimeException(ExceptionConstants.INPUT_STREAM_READING_EXCEPTION);
         }
         return outputStream;

@@ -2,7 +2,6 @@ package by.zagart.android.penumbra.utils;
 
 import android.annotation.TargetApi;
 import android.os.Build;
-import android.util.Log;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -13,43 +12,44 @@ import java.lang.reflect.ParameterizedType;
  *
  * @author zagart
  */
+@SuppressWarnings("unused")
+final class ReflectionUtil {
 
-public class ReflectionUtil {
+    private static final int API_19 = 19;
 
-    public static <Entity> Entity getGenericObject(final Object pTarget,
-                                                   final int pParameterPosition) {
-        ParameterizedType parameterizedType = (ParameterizedType) pTarget.getClass()
+    public static <O> O getGenericObject(final Object pTarget, final int pParameterPosition) {
+        final ParameterizedType parameterizedType = (ParameterizedType) pTarget.getClass()
                 .getGenericSuperclass();
-        Class<?> clazz = (Class<?>) parameterizedType.getActualTypeArguments()[pParameterPosition];
-        Constructor<?> constructor = clazz.getConstructors()[0];
-        Object object;
-        if (Build.VERSION.SDK_INT >= 19) {
+        final Class<?> clazz = (Class<?>) parameterizedType
+                .getActualTypeArguments()[pParameterPosition];
+        final Constructor<?> constructor = clazz.getConstructors()[0];
+        final O object;
+        if (Build.VERSION.SDK_INT >= API_19) {
             object = getObjectApi19(constructor);
         } else {
             object = getObject(constructor);
         }
-        return (Entity) object;
+        return object;
     }
 
     @TargetApi(19)
-    private static Object getObjectApi19(final Constructor<?> pConstructor) {
-        Object object = null;
+    private static <O> O getObjectApi19(final Constructor<?> pConstructor) {
+        final O object;
         try {
-            object = pConstructor.newInstance();
+            object = (O) pConstructor.newInstance();
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException pEx) {
-            Log.e(ReflectionUtil.class.getSimpleName(), pEx.getMessage(), pEx);
+            throw new RuntimeException(pEx.getMessage());
         }
         return object;
     }
 
-    private static Object getObject(final Constructor<?> pConstructor) {
-        Object object = null;
+    private static <O> O getObject(final Constructor<?> pConstructor) {
+        final O object;
         try {
-            object = pConstructor.newInstance();
-        } catch (Exception pEx) {
-            Log.e(ReflectionUtil.class.getSimpleName(), pEx.getMessage(), pEx);
+            object = (O) pConstructor.newInstance();
+        } catch (final Exception pEx) {
+            throw new RuntimeException(pEx.getMessage());
         }
         return object;
     }
-
 }

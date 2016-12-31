@@ -29,10 +29,10 @@ import by.zagart.android.penumbra.utils.ImageUtil;
 @SuppressWarnings("unused")
 public class BitmapDrawer implements IDrawable<ImageView, String> {
 
-    final private static float MEMORY_USE_COEFFICIENT = 0.125f; //12.5%
+    private static final float MEMORY_USE_COEFFICIENT = 0.125f; //12.5%
     private final LruCache<String, Bitmap> mCache;
-    private boolean mResize = false;
-    private ThreadManager mThreadManager;
+    private final ThreadManager mThreadManager;
+    private boolean mResize;
 
     public BitmapDrawer(@NonNull final ThreadManager pThreadManager) {
         mThreadManager = pThreadManager;
@@ -70,19 +70,9 @@ public class BitmapDrawer implements IDrawable<ImageView, String> {
         }
     }
 
-    private Bitmap getFromCache(String pUrl) {
+    private Bitmap getFromCache(final String pUrl) {
         synchronized (mCache) {
             return mCache.get(pUrl);
-        }
-    }
-
-    private boolean putInCache(String pUrl, Bitmap pBitmap) {
-        synchronized (mCache) {
-            if (mCache.get(pUrl) == null) {
-                mCache.put(pUrl, pBitmap);
-                return true;
-            }
-            return false;
         }
     }
 
@@ -90,17 +80,21 @@ public class BitmapDrawer implements IDrawable<ImageView, String> {
         final Bitmap bitmap = getFromCache(pUrl);
         if (bitmap != null) {
             try {
-                mThreadManager.post(() -> {
-                    if (mResize) {
-                        pImageView.setImageBitmap(ImageUtil.getResizedBitmap(
-                                bitmap,
-                                pImageView.getWidth(),
-                                pImageView.getHeight()));
-                    } else {
-                        pImageView.setImageBitmap(bitmap);
+                mThreadManager.post(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        if (mResize) {
+                            pImageView.setImageBitmap(ImageUtil.getResizedBitmap(
+                                    bitmap,
+                                    pImageView.getWidth(),
+                                    pImageView.getHeight()));
+                        } else {
+                            pImageView.setImageBitmap(bitmap);
+                        }
                     }
                 });
-            } catch (Exception pEx) {
+            } catch (final Exception pEx) {
                 return false;
             }
             return true;
@@ -136,9 +130,9 @@ public class BitmapDrawer implements IDrawable<ImageView, String> {
     private class BitmapDownloadCallback implements ICallback<Void, ByteArrayOutputStream> {
 
         private static final int BITMAP_DECODE_START_INDEX = 0;
-        private IHttpClient mHttpClient = HttpFactory.getDefaultClient();
+        private final IHttpClient mHttpClient = HttpFactory.getDefaultClient();
+        private final WeakReference<ImageView> mImageView;
         private byte[] downloaded;
-        private WeakReference<ImageView> mImageView;
 
         BitmapDownloadCallback(final ImageView pImageView) {
             mImageView = new WeakReference<>(pImageView);
@@ -170,7 +164,7 @@ public class BitmapDrawer implements IDrawable<ImageView, String> {
                 if (resultStream != null) {
                     downloaded = resultStream.toByteArray();
                 }
-            } catch (IOException pEx) {
+            } catch (final IOException pEx) {
                 onException(pParam, pEx);
             }
         }
@@ -178,6 +172,16 @@ public class BitmapDrawer implements IDrawable<ImageView, String> {
         @Override
         public void onUpdate(final String pParam, final Void pVoid) {
             //ignored
+        }
+
+        private boolean putInCache(final String pUrl, final Bitmap pBitmap) {
+            synchronized (mCache) {
+                if (mCache.get(pUrl) == null) {
+                    mCache.put(pUrl, pBitmap);
+                    return true;
+                }
+                return false;
+            }
         }
     }
 }

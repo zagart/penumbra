@@ -8,7 +8,8 @@ import android.view.animation.AnimationUtils;
  *
  * @author zagart
  */
-public class AnimationUtil {
+@SuppressWarnings("unused")
+public final class AnimationUtil {
 
     public static void fadeIn(final View... pViews) {
         processBasicAnimation(android.R.anim.fade_in, pViews);

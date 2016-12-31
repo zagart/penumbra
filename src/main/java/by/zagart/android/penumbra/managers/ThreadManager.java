@@ -23,7 +23,7 @@ public class ThreadManager {
     private static final int DEFAULT_THREADS_NUMBER = 3;
     private static final int MAX_THREADS_NUMBER = Math.max(COUNT_CORE, DEFAULT_THREADS_NUMBER);
     private final ExecutorService mPool;
-    private Handler mHandler;
+    private final Handler mHandler;
 
     public ThreadManager(@Execution final String pExecution) {
         switch (pExecution) {
@@ -63,18 +63,20 @@ public class ThreadManager {
             final IAction<String, Void, ByteArrayOutputStream> pAction,
             final ICallback<Void, ByteArrayOutputStream> pCallback,
             final String pParam) {
-        mPool.execute(
-                () -> {
-                    try {
-                        final ByteArrayOutputStream result = pAction.process(pCallback, pParam);
-                        if (result != null) {
-                            pCallback.onComplete(pParam, result);
-                        }
-                    } catch (InterruptedException pEx) {
-                        pCallback.onException(ThreadManager.class.getSimpleName(), pEx);
+        mPool.execute(new Runnable() {
+
+            @Override
+            public void run() {
+                try {
+                    final ByteArrayOutputStream result = pAction.process(pCallback, pParam);
+                    if (result != null) {
+                        pCallback.onComplete(pParam, result);
                     }
+                } catch (final InterruptedException pEx) {
+                    pCallback.onException(ThreadManager.class.getSimpleName(), pEx);
                 }
-        );
+            }
+        });
     }
 
     /**
@@ -82,7 +84,7 @@ public class ThreadManager {
      *
      * @param pRunnable Object to run
      */
-    public void post(Runnable pRunnable) {
+    public void post(final Runnable pRunnable) {
         mHandler.post(pRunnable);
     }
 

@@ -9,7 +9,7 @@ import android.support.annotation.StringDef;
  * @author zagart
  */
 
-public interface IHttpData {
+interface IHttpData {
 
     @StringDef({
             Header.ACTION,
@@ -29,9 +29,7 @@ public interface IHttpData {
         String CRITERIA = "criteria";
     }
 
-    @StringDef({
-            ContentType.APPLICATION_JSON
-    })
+    @StringDef(ContentType.APPLICATION_JSON)
     @interface ContentType {
 
         String APPLICATION_JSON = "application/json; charset=UTF-8";

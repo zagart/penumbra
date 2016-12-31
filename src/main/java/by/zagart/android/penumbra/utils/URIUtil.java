@@ -12,12 +12,11 @@ import by.zagart.android.penumbra.constants.URIConstants;
  *
  * @author zagart
  */
-
-public class URIUtil {
-
+@SuppressWarnings("unused")
+public final class URIUtil {
 
     public static String getClearUriPath(final Uri pUri) {
-        String path = pUri.getPath();
+        final String path = pUri.getPath();
         return path.replace(URIConstants.URI_SEPARATOR, ApplicationConstants.EMPTY_STRING);
     }
 
